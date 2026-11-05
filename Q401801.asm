@@ -1,0 +1,63 @@
+
+DATA SEGMENT
+    A DW ?
+    B DW ?
+    YC DW ?
+DATA ENDS
+
+CODE SEGMENT
+    ASSUME CS: CODE, DS:DATA
+START:
+    MOV AX,DATA
+    MOV DS,AX
+    CALL INPUT
+    MOV A,BX
+    CALL INPUT
+    MOV B,BX
+    CALL INPUT
+    MOV YC,BX
+    MOV AX,A
+    MOV BX,B
+    CMP AX,BX
+    JL TRANSFOR
+    JMP COUNT
+TRANSFOR:
+    MOV CX,AX
+    MOV AX,BX
+    MOV BX,CX
+COUNT:
+    MOV DX,0H
+    SUB AX,BX
+    MOV CX,YC
+    MUL CX
+    SAR AX,1;Г§вд2
+    MOV DX,AX
+    MOV AX,4CH
+    INT 21H
+
+INPUT PROC
+    PUSH AX
+    MOV BX,0
+    MOV AX,0
+    MOV CX,4
+LOOP1:MOV AH,1
+    INT 21H
+    SUB AL,30H
+    JL OVER
+    CMP AL,0AH
+    JG OVER
+    CBW
+    XCHG AX,BX
+    MOV CX,0AH
+    MUL CX
+    XCHG AX,BX
+    ADD BX,AX
+    LOOP LOOP1
+OVER:POP AX
+    RET
+INPUT ENDP
+CODE ENDS
+    END START
+    END TRANSFoR
+    END COUNT
+    
